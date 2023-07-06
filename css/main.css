@@ -183,7 +183,7 @@ a.call__btn.phone:hover {
 	border-bottom: 1px solid #204551;
 }
 
-a.call__btn.modal {
+a.call__btn.modal__btn {
     font-size: 14px;
     color: #549c5f;
     font-weight: 700;
