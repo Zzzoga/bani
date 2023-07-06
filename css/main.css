@@ -194,7 +194,7 @@ a.call__btn.modal__btn {
 	margin-top: 5px;
 }
 
-a.call__btn.modal:hover {
+a.call__btn.modal__btn:hover {
 	border-bottom: 1px solid #549c5f;
 }
 
