@@ -110,6 +110,15 @@ document.addEventListener('DOMContentLoaded', ()=> {
 			}, 500)
 		})
 	})
+
+	document.querySelector('.modal__btn').addEventListener('click', (e) => {
+		e.preventDefault()
+		document.querySelector('html').style.overflowY = 'hidden'
+		document.querySelector('.modal').style.display = 'flex'
+		setTimeout(()=> {
+			document.querySelector('.modal').style.opacity = 1
+		}, 500)
+	})
 	
 	document.querySelector('.modal__close').addEventListener('click', ()=> {
 		document.querySelector('html').style.overflowY = 'auto'
