@@ -1,52 +1,88 @@
 <?php
+// Файлы phpmailer
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+require 'PHPMailer/Exception.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
+# проверка, что ошибки нет
+if (!error_get_last()) {
 
-//Script Foreach
-$c = true;
-if ( $method === 'POST' ) {
+    // Переменные, которые отправляет пользователь
+    $name = $_POST['name'] ;
+    $phone = $_POST['phone'];
+    $phone = $_POST['mail'];
+    
+    
+    // Формирование самого письма
+    $title = "Бани под ключ";
+    $body = "
+    <h3>Заявка с сайта Бани под ключ</h3>
+    <table>
+            <tr>
+                <td style='padding: 5px; border: 1px solid #ccc;'><b>Имя</b></td>
+                <td style='padding: 5px; border: 1px solid #ccc;'>$name</td>
+            </tr>
+            <tr>
+                <td style='padding: 5px; border: 1px solid #ccc;'><b>Телефон</b></td>
+                <td style='padding: 5px; border: 1px solid #ccc;'>$phone</td>
+            </tr>
+            <tr>
+                <td style='padding: 5px; border: 1px solid #ccc;'><b>Почта</b></td>
+                <td style='padding: 5px; border: 1px solid #ccc;'>$mail</td>
+            </tr>
+        </table>
+    ";
+    
+    // Настройки PHPMailer
+    $mail = new PHPMailer\PHPMailer\PHPMailer();
+    
+    $mail->isSMTP();   
+    $mail->CharSet = "UTF-8";
+    $mail->SMTPAuth   = true;
+    $mail->SMTPDebug = 2;
+    $mail->Debugoutput = function($str, $level) {$GLOBALS['data']['debug'][] = $str;};
+    
+    // Настройки вашей почты
+    $mail->Host       = 'smtp.mail.ru'; // SMTP сервера вашей почты
+    $mail->Username   = 'bani.ufa.info@mail.ru'; // Логин на почте
+    $mail->Password   = 'FhugJ2RtsBguS2TLttmb'; // Пароль на почте
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port       = 465;
+    $mail->setFrom('bani.ufa.info@mail.ru', 'Бани под ключ'); // Адрес самой почты и имя отправителя
 
-	$project_name = trim($_POST["project_name"]);
-	$admin_email  = trim($_POST["admin_email"]);
-	$form_subject = trim($_POST["form_subject"]);
-
-	foreach ( $_POST as $key => $value ) {
-		if ( $value != "" && $key != "project_name" && $key != "admin_email" && $key != "form_subject" ) {
-			$message .= "
-			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
-			<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
-			<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
-		</tr>
-		";
-	}
+    // Получатель письма
+    $mail->addAddress('fayzullinoff@gmail.com'); 
+    
+    // Прикрипление файлов к письму
+    if (!empty($file['name'][0])) {
+        for ($i = 0; $i < count($file['tmp_name']); $i++) {
+            if ($file['error'][$i] === 0) 
+                $mail->addAttachment($file['tmp_name'][$i], $file['name'][$i]);
+        }
+    }
+    // Отправка сообщения
+    $mail->isHTML(true);
+    $mail->Subject = $title;
+    $mail->Body = $body;    
+    
+    // Проверяем отправленность сообщения
+    if ($mail->send()) {
+        $data['result'] = "success";
+        $data['info'] = "Сообщение успешно отправлено!";
+    } else {
+        $data['result'] = "error";
+        $data['info'] = "Сообщение не было отправлено. Ошибка при отправке письма";
+        $data['desc'] = "Причина ошибки: {$mail->ErrorInfo}";
+    }
+    
+} else {
+    $data['result'] = "error";
+    $data['info'] = "В коде присутствует ошибка";
+    $data['desc'] = error_get_last();
 }
-} else if ( $method === 'GET' ) {
 
-	$project_name = trim($_GET["project_name"]);
-	$admin_email  = trim($_GET["admin_email"]);
-	$form_subject = trim($_GET["form_subject"]);
+// Отправка результата
+header('Content-Type: application/json');
+echo json_encode($data);
 
-	foreach ( $_GET as $key => $value ) {
-		if ( $value != "" && $key != "project_name" && $key != "admin_email" && $key != "form_subject" ) {
-			$message .= "
-			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
-			<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
-			<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
-		</tr>
-		";
-	}
-}
-}
-
-$message = "<table style='width: 100%;'>$message</table>";
-
-function adopt($text) {
-	return '=?UTF-8?B?'.base64_encode($text).'?=';
-}
-
-$headers = "MIME-Version: 1.0" . PHP_EOL .
-"Content-Type: text/html; charset=utf-8" . PHP_EOL .
-'From: '.adopt($project_name).' <'.$admin_email.'>' . PHP_EOL .
-'Reply-To: '.$admin_email.'' . PHP_EOL;
-
-mail($admin_email, adopt($form_subject), $message, $headers );
+?>

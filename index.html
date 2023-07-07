@@ -8,7 +8,7 @@
 
 	<meta charset="utf-8">
 
-	<title>Заголовок</title>
+	<title>Бани под ключ в Уфе</title>
 	<meta name="description" content="">
 
 	<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
@@ -384,6 +384,64 @@
 	<script src="libs/waypoints/waypoints.min.js"></script>
 	<script src="libs/animate/animate-css.js"></script>
 	<script src="libs/plugins-scroll/plugins-scroll.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js" integrity="sha256-huW7yWl7tNfP7lGk46XE+Sp0nCotjzYodhVKlwaNeco=" crossorigin="anonymous"></script>
+	<script>
+		SmoothScroll({
+			animationTime    : 800,
+			stepSize         : 75,
+	
+			
+			accelerationDelta : 30,  
+			accelerationMax   : 2,   
+	
+	
+			keyboardSupport   : true,  
+			arrowScroll       : 50,
+	
+	
+			pulseAlgorithm   : true,
+			pulseScale       : 4,
+			pulseNormalize   : 1,
+	
+			touchpadSupport   : true,
+		})
+	</script>
+	<script>
+		async function submitForm(event) {
+		event.preventDefault(); // отключаем перезагрузку/перенаправление страницы
+		try {
+			// Формируем запрос
+			const response = await fetch(event.target.action, {
+				method: 'POST',
+				body: new FormData(event.target)
+			});
+			// проверяем, что ответ есть
+			if (!response.ok) throw (`Ошибка при обращении к серверу: ${response.status}`);
+			// проверяем, что ответ действительно JSON
+			const contentType = response.headers.get('content-type');
+			if (!contentType || !contentType.includes('application/json')) {
+			throw ('Ошибка обработки. Ответ не JSON');
+			}
+			// обрабатываем запрос
+			const json = await response.json();
+			if (json.result === "success") {
+				// в случае успеха
+				alert(json.info);
+				document.querySelectorAll('form').forEach( (form) => {
+                    setTimeout( () => {
+                        form.reset(); 
+                    }, 500)
+                })
+			} else { 
+				// в случае ошибки
+				console.log(json);
+				throw (json.info);
+			}
+		} catch (error) { // обработка ошибки
+			alert(error);
+		}
+		}
+	</script>
 	
 	<script src="js/common.js"></script>
 	
