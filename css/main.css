@@ -993,3 +993,11 @@ h3.modal__title {
     font-size: 12px;
     line-height: 1;
 }
+
+.burger {
+    display: none;
+}
+
+.modal__nav {
+    display: none;
+}

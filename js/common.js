@@ -136,6 +136,42 @@ document.addEventListener('DOMContentLoaded', ()=> {
 		}, 500)
 	})
 
+	document.querySelector('.burger').addEventListener('click', e => {
+		e.preventDefault()
+		if (e.target.closest('.burger').querySelector('.burger__text').textContent === 'Меню') {
+			document.querySelector('.modal__nav').style.display = 'flex'
+			document.querySelector('html').style.overflowY = 'hidden'
+			document.querySelector('.burger__text').innerHTML = 'Закрыть'
+			document.querySelector('.burger__lines img').src = 'img/nav__close.svg'
+			setTimeout(()=> {
+				document.querySelector('.modal__nav').style.transform = 'translateY(0%)'
+			}, 100)
+		} else if (e.target.closest('.burger').querySelector('.burger__text').textContent === 'Закрыть') {
+			document.querySelector('.modal__nav').style.transform = 'translateY(-100%)'
+			document.querySelector('html').style.overflowY = 'auto'
+			document.querySelector('.burger__text').innerHTML = 'Меню'
+			document.querySelector('.burger__lines img').src = 'img/nav__burger.svg'
+			setTimeout(()=> {
+				document.querySelector('.modal__nav').style.display = 'none'
+			}, 500)
+		}
+	})
+
+	document.querySelectorAll('.modal__nav__link').forEach(e => {
+		e.addEventListener('click', (event)=> {
+			event.preventDefault()
+			document.querySelector('.modal__nav').style.transform = 'translateY(-100%)'
+			document.querySelector('html').style.overflowY = 'auto'
+			document.querySelector('.burger__text').innerHTML = 'Меню'
+			document.querySelector('.burger__lines img').src = 'img/nav__burger.svg'
+			setTimeout(()=> {
+				document.querySelector('.modal__nav').style.display = 'none'
+			}, 500)
+			document.querySelector('header').classList.add('header_hidden')
+		})
+		
+	})
+
 	$('.first .product__slider').slick({
 		infinite: true,
 		slidesToShow: 1,
