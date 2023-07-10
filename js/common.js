@@ -179,7 +179,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
 		arrows: true,
 		dots: false,
 		prevArrow: '.first .arrow.prev',
-		nextArrow: '.first .arrow.next'
+		nextArrow: '.first .arrow.next',
+		adaptiveHeight: true
 	  });
 
 	  $('.second .product__slider').slick({
@@ -189,7 +190,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
 		arrows: true,
 		dots: false,
 		prevArrow: '.second .arrow.prev',
-		nextArrow: '.second .arrow.next'
+		nextArrow: '.second .arrow.next',
+		adaptiveHeight: true
 	  });
 
 	  $('.third .product__slider').slick({
@@ -199,6 +201,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
 		arrows: true,
 		dots: false,
 		prevArrow: '.third .arrow.prev',
-		nextArrow: '.third .arrow.next'
+		nextArrow: '.third .arrow.next',
+		adaptiveHeight: true
 	  });
 })
